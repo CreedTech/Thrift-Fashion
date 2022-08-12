@@ -1,0 +1,19 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block branding %}
+
+<!-- TO CHANGE THE LOGO ON THE ADMIN PANEL HEADER -->
+<h1 id="head">
+{% comment %} <a href="/admin"><img src="{% static 'images/logos/black-logo.png'  %}" alt="" class="brand_img" height="50px" width="300px"></a> {% endcomment %}
+<a class="navbar-brand" href="{% url 'core:home' %}">Fast Car</a>
+</h1>
+
+{% endblock %}   
+
+<!-- TO STYLE THE ADMIN PANEL, CHANGE COLOR ETC... -->
+<!-- we can now create new file for our admin.css inside the static folder -->
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+{% endblock %}
