@@ -12,9 +12,10 @@ from django.shortcuts import redirect
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, View
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
-from .models import Item, OrderItem, Order, Address, Payment, Coupon, Refund, UserProfile
+from .models import Category, Item, OrderItem, Order, Address, Payment, Coupon, Refund, UserProfile
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -197,7 +198,7 @@ class CheckoutView(View):
                     return redirect('core:checkout')
         except ObjectDoesNotExist:
             messages.warning(self.request, "You do not have an active order")
-            return redirect("core:order-summary")
+            return redirect("core:cart")
 
 
 class PaymentView(View):
@@ -350,9 +351,9 @@ def home(request):
     name = request.user
     paginate_by = 10
     items = Item.objects.all()
-    hot_product1 = Item.objects.all().order_by('?')[0]
-    hot_product2 = Item.objects.all().order_by('?')[1]
-    recent_product = Item.objects.all().order_by('-launch_date')[0:2]
+    hot_product1 = Item.objects.all().order_by('?')[0] if Item.objects.all().count() > 0 else Item.objects.all()
+    hot_product2 = Item.objects.all().order_by('?')[1] if Item.objects.all().count() > 0 else Item.objects.all()
+    recent_product = Item.objects.all().order_by('-launch_date')[0:2] if Item.objects.all().count() > 0 else Item.objects.all()
     context = {
         'name': name,
         'items': items,
@@ -364,27 +365,52 @@ def home(request):
     return render(request, template_name, context)
 
 
-def products(request):
-    template_name = "products.html"
+def product_category(request, slug):
+    template_name = "category.html"
     name = request.user
     paginate_by = 10
     items = Item.objects.all()
+    category = get_object_or_404(Category, slug=slug)
+    item = Item.objects.filter(category__slug=slug)
     context = {
         'name': name,
         'items': items,
-        'paginate_by': paginate_by
+        'paginate_by': paginate_by,
+        'category': category,
+        "item": item
     }
     return render(request, template_name, context)
 
 
-class OrderSummaryView(LoginRequiredMixin, View):
+def products(request):
+    template_name = "products.html"
+    name = request.user
+    # paginate_by = 10
+    items = Item.objects.all().order_by('-id')
+    page = request.GET.get('page', 2)
+    paginator = Paginator(items, 3)
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+    context = {
+        'name': name,
+        'items': items,
+        'products': products
+    }
+    return render(request, template_name, context)
+
+
+class CartView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)
             context = {
                 'object': order
             }
-            return render(self.request, 'order_summary.html', context)
+            return render(self.request, 'cart.html', context)
         except ObjectDoesNotExist:
             messages.warning(self.request, "You do not have an active order")
             return redirect("/")
@@ -411,18 +437,18 @@ def add_to_cart(request, slug):
             order_item.quantity += 1
             order_item.save()
             messages.info(request, "This item quantity was updated.")
-            return redirect("core:order-summary")
+            return redirect("core:cart")
         else:
             order.items.add(order_item)
             messages.info(request, "This item was added to your cart.")
-            return redirect("core:order-summary")
+            return redirect("core:cart")
     else:
         ordered_date = timezone.now()
         order = Order.objects.create(
             user=request.user, ordered_date=ordered_date)
         order.items.add(order_item)
         messages.info(request, "This item was added to your cart.")
-        return redirect("core:order-summary")
+        return redirect("core:cart")
 
 
 @login_required
@@ -444,7 +470,7 @@ def remove_from_cart(request, slug):
             order.items.remove(order_item)
             order_item.delete()
             messages.info(request, "This item was removed from your cart.")
-            return redirect("core:order-summary")
+            return redirect("core:cart")
         else:
             messages.info(request, "This item was not in your cart")
             return redirect("core:product", slug=slug)
@@ -475,7 +501,7 @@ def remove_single_item_from_cart(request, slug):
             else:
                 order.items.remove(order_item)
             messages.info(request, "This item quantity was updated.")
-            return redirect("core:order-summary")
+            return redirect("core:cart")
         else:
             messages.info(request, "This item was not in your cart")
             return redirect("core:product", slug=slug)
