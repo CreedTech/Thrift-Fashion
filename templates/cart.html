@@ -36,7 +36,7 @@
             {% for order_item in object.items.all %}
             <tr>
               <td class="align-middle">
-                <img src="img/product1.jpg" alt="" style="width: 50px" />
+                <img src="{{ order_item.item.image.url }}" alt="" style="width: 50px" />
                 {{ order_item.item.title }}
               </td>
               <td class="align-middle">

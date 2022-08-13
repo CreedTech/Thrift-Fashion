@@ -102,3 +102,12 @@
     
 })(jQuery);
 
+
+let mixerPortfolio= mixitup('.work__container', {
+    selectors: {
+        target: '.work__img'
+    },
+    animation: {
+        duration: 300
+    }
+});

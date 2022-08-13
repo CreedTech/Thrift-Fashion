@@ -5,10 +5,8 @@
   <div class="row bg-secondary py-1 px-xl-5">
     <div class="col-lg-6 d-none d-lg-block">
       <div class="d-inline-flex align-items-center h-100">
-        <a class="text-body mr-3" href="about.html">About</a>
-        <a class="text-body mr-3" href="contact.html">Contact</a>
-        <a class="text-body mr-3" href="">Help</a>
-        <a class="text-body mr-3" href="">FAQs</a>
+        <a class="text-body mr-3" href="{% url 'core:about' %}">About</a>
+        <a class="text-body mr-3" href="{% url 'core:contact' %}">Contact</a>
       </div>
     </div>
     <div class="col-lg-6 text-center text-lg-right">
@@ -93,12 +91,14 @@
       </a>
     </div>
     <div class="col-lg-4 col-6 text-left">
-      <form action="">
+      <form method ="GET" action="{% url 'core:search-result' %}">
         <div class="input-group">
+          {% csrf_token %}
           <input
             type="text"
             class="form-control"
             placeholder="Search for products"
+            name = "search"
           />
           <div class="input-group-append">
             <button type="submit" class="input-group-text bg-transparent text-primary">
@@ -110,7 +110,7 @@
     </div>
     <div class="col-lg-4 col-6 text-right">
       <p class="m-0">Customer Service</p>
-      <h5 class="m-0">+02349137104825</h5>
+      <h5 class="m-0"><a href="telto:+2349137104825">+2349137104825</a></h5>
     </div>
   </div>
 </div>
@@ -168,23 +168,12 @@
           id="navbarCollapse"
         >
           <div class="navbar-nav mr-auto py-0">
-            <a href="{% url 'core:home' %}" class="nav-item nav-link active">Home</a>
+            <a href="{% url 'core:home' %}" class="nav-item nav-link">Home</a>
             <a href="{% url 'core:products' %}" class="nav-item nav-link">Fashion</a>
-            <a href="detail.html" class="nav-item nav-link">Today's Deals</a>
-            <div class="nav-item dropdown">
-              <a
-                href="#"
-                class="nav-link dropdown-toggle"
-                data-toggle="dropdown"
-                >Orders <i class="fa fa-angle-down mt-1"></i
-              ></a>
-              <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                <a href="cart.html" class="dropdown-item">Shopping Cart</a>
-                <a href="checkout.html" class="dropdown-item">Checkout</a>
-              </div>
-            </div>
-            <a href="contact.html" class="nav-item nav-link">Contact</a>
-            <a href="contact.html" class="nav-item nav-link">Feedback</a>
+            <a href="{% url 'core:todays_deal' %}" class="nav-item nav-link">Today's Deals</a>
+            <a href="{% url 'core:about' %}" class="nav-item nav-link">About Us</a>
+            <a href="{% url 'core:contact' %}" class="nav-item nav-link">Contact</a>
+            <a href="{% url 'core:feedback' %}" class="nav-item nav-link">Feedback</a>
           </div>
           {% if request.user.is_authenticated %}
           <div class="navbar-nav ml-auto py-0 d-none d-lg-block">

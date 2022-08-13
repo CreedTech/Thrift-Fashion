@@ -11,10 +11,15 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from django.db.models import Q
 from django.views.generic import ListView, DetailView, View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from decimal import Decimal as D
+from django.db.models import Max
 
-from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
+from .context_processor import ProductFilter
+
+from .forms import CheckoutForm, CouponForm, FeedbackForm, RefundForm, PaymentForm, ContactForm
 from .models import Category, Item, OrderItem, Order, Address, Payment, Coupon, Refund, UserProfile
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -75,7 +80,7 @@ class CheckoutView(View):
                 use_default_shipping = form.cleaned_data.get(
                     'use_default_shipping')
                 if use_default_shipping:
-                    print("Using the defualt shipping address")
+                    print("Using the default shipping address")
                     address_qs = Address.objects.filter(
                         user=self.request.user,
                         address_type='S',
@@ -337,7 +342,7 @@ class PaymentView(View):
                 return redirect("/")
 
         messages.warning(self.request, "Invalid data received")
-        return redirect("/payment/stripe/")
+        return redirect("core:home")
 
 
 # class HomeView(ListView):
@@ -382,11 +387,49 @@ def product_category(request, slug):
     return render(request, template_name, context)
 
 
+def PostSearch(request):
+    template_name = 'searchresult.html'
+    user_search = request.GET.get("search")
+    if user_search:
+        products = Item.objects.filter(Q(title__icontains=user_search) | Q(description__icontains=user_search))
+    else:
+        products = Item.objects.all()
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(products, 3)
+
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+
+    context = {
+        'products': products,
+    }
+    return render(request, template_name, context)
+
+
 def products(request):
     template_name = "products.html"
     name = request.user
-    # paginate_by = 10
     items = Item.objects.all().order_by('-id')
+    sort_by = request.GET.get("sort", "l2h")
+    filter_by = request.GET.get("filter", "0-100")
+    if sort_by == "l2h":
+        if Item.objects.filter(discount_price=True):
+            sort_list = Item.objects.all().order_by("discount_price")
+        else:
+            sort_list = Item.objects.all().order_by("price")
+    elif sort_by == "h2l":
+        if Item.objects.filter(discount_price=True):
+            sort_list = Item.objects.all().order_by("-discount_price")
+        else:
+            sort_list = Item.objects.all().order_by("-price")
+    category_list = Category.objects.all()
+    f = ProductFilter(request.GET, queryset=Item.objects.all())
+    # paginate_by = 10
     page = request.GET.get('page', 2)
     paginator = Paginator(items, 3)
     try:
@@ -398,9 +441,86 @@ def products(request):
     context = {
         'name': name,
         'items': items,
-        'products': products
+        'products': products,
+        'filter': f,
+        'sort_list': sort_list,
+        'category_list': category_list,
+
     }
     return render(request, template_name, context)
+
+
+def todays_deal(request):
+    template_name = "todays_deal.html"
+    name = request.user
+    items = Item.objects.all().order_by('-id')
+    sort_by = request.GET.get("sort", "l2h")
+    filter_by = request.GET.get("filter", "0-100")
+    recent_product = Item.objects.all().order_by('-launch_date')[0:2] if Item.objects.all().count() > 0 else Item.objects.all()
+    if sort_by == "l2h":
+        if Item.objects.filter(discount_price=True):
+            sort_list = Item.objects.all().order_by("discount_price")
+        else:
+            sort_list = Item.objects.all().order_by("price")
+    elif sort_by == "h2l":
+        if Item.objects.filter(discount_price=True):
+            sort_list = Item.objects.all().order_by("-discount_price")
+        else:
+            sort_list = Item.objects.all().order_by("-price")
+    category_list = Category.objects.all()
+    f = ProductFilter(request.GET, queryset=Item.objects.all())
+    # paginate_by = 10
+    page = request.GET.get('page', 2)
+    paginator = Paginator(items, 3)
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+    context = {
+        'name': name,
+        'items': items,
+        'products': products,
+        'filter': f,
+        'sort_list': sort_list,
+        'category_list': category_list,
+        'todays_deal': recent_product,
+
+    }
+    return render(request, template_name, context)
+
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST or None)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = ContactForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'contact.html', context)
+
+
+def about(request):
+    return render(request, 'about.html')
+
+
+def feedback(request):
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST or None)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = FeedbackForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'feedback.html', context)
 
 
 class CartView(LoginRequiredMixin, View):

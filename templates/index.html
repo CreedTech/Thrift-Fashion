@@ -45,7 +45,7 @@
                       </p>
                       <a
                         class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp"
-                        href="#"
+                        href="{% url 'core:products' %}"
                         >Shop Now</a
                       >
                     </div>
@@ -75,7 +75,7 @@
                       </p>
                       <a
                         class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp"
-                        href="#"
+                        href="{% url 'core:products' %}"
                         >Shop Now</a
                       >
                     </div>
@@ -105,7 +105,7 @@
                       </p>
                       <a
                         class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp"
-                        href="#"
+                        href="{% url 'core:products' %}"
                         >Shop Now</a
                       >
                     </div>
@@ -118,9 +118,8 @@
             <div class="product-offer mb-30" style="height: 200px">
               <img class="img-fluid" src="{{hot_product1.image.url}}" alt="" />
               <div class="offer-text">
-                <h6 class="text-white text-uppercase">Save 20%</h6>
                 <h3 class="text-white mb-3">Special Offer</h3>
-                <a href="" class="btn btn-primary">Shop Now</a>
+                <a href="{{ hot_product1.get_absolute_url }}" class="btn btn-primary">Shop Now</a>
               </div>
             </div>
             <div class="product-offer mb-30" style="height: 200px">
@@ -128,7 +127,7 @@
               <div class="offer-text">
                 <h6 class="text-white text-uppercase">Save 20%</h6>
                 <h3 class="text-white mb-3">Special Offer</h3>
-                <a href="" class="btn btn-primary">Shop Now</a>
+                <a href="{{ hot_product2.get_absolute_url }}" class="btn btn-primary">Shop Now</a>
               </div>
             </div>
           </div>
@@ -223,8 +222,8 @@
               </div>
               <div class="text-center py-4">
                 <a class="h6 text-decoration-none text-truncate" href="{{ item.get_absolute_url }}"
-                  >{{ item.title }}</a
-                ><span class="badge badge-pill {{ item.get_label_display }}-color">NEW</span>
+                  >{{ item.title }}&nbsp;&nbsp;</a
+                ><span class="badge badge-pill badge-{{ item.get_label_display }}">{{ item.get_stock_display }}</span>
                 <div
                   class="d-flex align-items-center justify-content-center mt-2"
                 >
@@ -256,7 +255,7 @@
               <img class="img-fluid" src="{{hot_product1.image.url}}" alt="" />
               <div class="offer-text">
                 <h3 class="text-white mb-3">Special Offer</h3>
-                <a href="" class="btn btn-primary">Shop Now</a>
+                <a href="{{ hot_product1.get_absolute_url }}" class="btn btn-primary">Shop Now</a>
               </div>
             </div>
           </div>
@@ -265,7 +264,7 @@
               <img class="img-fluid" src="{{hot_product2.image.url}}" alt="" />
               <div class="offer-text">
                 <h3 class="text-white mb-3">Special Offer</h3>
-                <a href="" class="btn btn-primary">Shop Now</a>
+                <a href="{{ hot_product2.get_absolute_url }}" class="btn btn-primary">Shop Now</a>
               </div>
             </div>
           </div>
@@ -292,8 +291,8 @@
               </div>
               <div class="text-center py-4">
                 <a class="h6 text-decoration-none text-truncate" href="{{ i.get_absolute_url }}"
-                  >{{i.title}}</a
-                ><span class="badge badge-pill {{ i.get_label_display }}-color">NEW</span>
+                  >{{i.title}} &nbsp;&nbsp;</a
+                ><span class="badge badge-pill badge-{{ i.get_label_display }}">{{ item.get_stock_display }}</span>
                 <div
                   class="d-flex align-items-center justify-content-center mt-2"
                 >

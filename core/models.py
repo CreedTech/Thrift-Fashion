@@ -9,7 +9,7 @@ from members.models import User
 
 LABEL_CHOICES = (
     ('P', 'primary'),
-    ('S', 'secondary'),
+    ('S', 'success'),
     ('D', 'danger')
 )
 
@@ -57,14 +57,36 @@ class Category(models.Model):
         return reverse("core:product_category", kwargs={"pk": self.pk})
 
 
+class Contact(models.Model):
+    fullName = models.CharField(max_length=100)
+    email = models.EmailField()
+    subject = models.CharField(max_length=100, blank=True)
+    message = models.TextField(max_length=1000)
+
+    def __str__(self):
+        return self.fullName
+
+
+class Feedback(models.Model):
+    fullName = models.CharField(max_length=100)
+    email = models.EmailField()
+    subject = models.CharField(max_length=100, blank=True)
+    message = models.TextField(max_length=1000)
+
+    def __str__(self):
+        return self.fullName
+
+
 class Item(models.Model):
     title = models.CharField(max_length=100)
     price = models.FloatField()
     image = models.ImageField(upload_to='portfolio/')
     discount_price = models.FloatField(blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    stock = models.CharField(choices=STOCK_CHOICES, max_length=2, blank=True, null=True)
-    label = models.CharField(choices=LABEL_CHOICES, max_length=1, blank=True, null=True)
+    stock = models.CharField(choices=STOCK_CHOICES,
+                             max_length=2, blank=True, null=True)
+    label = models.CharField(choices=LABEL_CHOICES,
+                             max_length=1, blank=True, null=True)
     slug = models.SlugField()
     description = models.TextField()
     launch_date = models.DateTimeField(auto_now_add=True)

@@ -1,52 +1,113 @@
-# from django import forms
-# from django_countries.fields import CountryField
-# from django_countries.widgets import CountrySelectWidget
-
-# PAYMENT_CHOICES = (
-#     ('S', 'Stripe'),
-#     ('P', 'PayStack'),
-# )
-
-
-# class CheckOutForm(forms.Form):
-#     name = forms.CharField(
-#         widget=forms.TextInput(attrs={
-#             'class': 'form-control'
-#         })
-#     )
-#     email = forms.EmailField(widget=forms.TextInput(attrs={
-#         'placeholder': 'youremail@example.com',
-#         'class': 'form-control'
-#     }))
-#     street_address = forms.CharField(widget=forms.TextInput(attrs={
-#         'placeholder': '1234 Main St',
-#         'class': 'form-control'
-#     }))
-#     apartment_address = forms.CharField(required=False, widget=forms.TextInput(attrs={
-#         'placeholder': 'Apartment or Suite',
-#         'class': 'form-control'
-#     }))
-#     country = CountryField(blank_label='Select country').formfield(widget=CountrySelectWidget(attrs={
-#         'class': 'custom-select d-block w-100'
-#     }))
-#     zip = forms.CharField(
-#         widget=forms.TextInput(attrs={
-#             'class': 'form-control'
-#         })
-#     )
-#     same_shipping_address = forms.BooleanField(required=False)
-#     save_info = forms.BooleanField(required=False)
-#     payment_options = forms.ChoiceField(widget=forms.RadioSelect, choices=PAYMENT_CHOICES)
-
 from django import forms
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
+from .models import Contact, Feedback
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 PAYMENT_CHOICES = (
     ('S', 'Stripe'),
-    ('P', 'PayPal')
+    ('P', 'PayStack')
 )
+
+
+class ContactForm(forms.ModelForm):
+    fullName = forms.CharField(max_length=100, widget=forms.TextInput(
+        attrs={
+            "placeholder": "Your name",
+            "class": "form-control",
+        }
+    ))
+    email = forms.EmailField(widget=forms.TextInput(
+        attrs={
+            "placeholder": "Your email",
+            "class": "form-control",
+        }
+    ))
+    subject = forms.CharField(max_length=100,
+                              widget=forms.TextInput(
+                                  attrs={
+                                      "placeholder": "Subject",
+                                      "class": "form-control",
+                                  }
+                              ))
+    message = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                "placeholder": "Message",
+                "class": "form-control",
+                "row": 8,
+                "column": 20
+            }
+        )
+    )
+
+    class Meta:
+        model = Contact
+        fields = '__all__'
+
+    def get_info(self):
+
+        # Cleaned data
+        cl_data = super().clean()
+
+        name = cl_data.get('name').strip()
+        from_email = cl_data.get('email')
+        subject = cl_data.get('subject')
+
+        msg = f'{name} with email {from_email} said:'
+        msg += f'\n"{subject}"\n\n'
+        msg += cl_data.get('message')
+
+        return subject, msg
+
+    def send(self):
+
+        subject, msg = self.get_info()
+
+        send_mail(
+            subject=subject,
+            message=msg,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[settings.RECIPIENT_ADDRESS]
+        )
+
+
+class FeedbackForm(forms.ModelForm):
+    fullName = forms.CharField(max_length=100, widget=forms.TextInput(
+        attrs={
+            "placeholder": "Your name",
+            "class": "form-control",
+        }
+    ))
+    email = forms.EmailField(widget=forms.TextInput(
+        attrs={
+            "placeholder": "Your email",
+            "class": "form-control",
+        }
+    ))
+    subject = forms.CharField(max_length=100,
+                              widget=forms.TextInput(
+                                  attrs={
+                                      "placeholder": "Subject",
+                                      "class": "form-control",
+                                  }
+                              ))
+    message = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                "placeholder": "Message",
+                "class": "form-control",
+                "row": 8,
+                "column": 20
+            }
+        )
+    )
+
+    class Meta:
+        model = Feedback
+        fields = '__all__'
 
 
 class CheckoutForm(forms.Form):
@@ -66,7 +127,7 @@ class CheckoutForm(forms.Form):
         widget=CountrySelectWidget(attrs={
             'class': 'custom-select d-block w-100',
         }))
-    billing_zip = forms.CharField(required=False)
+    billing_zip = forms.CharField()
 
     same_billing_address = forms.BooleanField(required=False)
     set_default_shipping = forms.BooleanField(required=False)

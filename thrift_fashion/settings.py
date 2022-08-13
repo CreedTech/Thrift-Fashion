@@ -1,11 +1,15 @@
 import os
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
 DEBUG = True
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '-05sgp9!deq=q1nltm@^^2cc+v29i(tyybv3v2t77qi66czazj'
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -15,9 +19,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'django.contrib.sites',
     'crispy_forms',
+    'widget_tweaks',
     'django_countries',
+    'django_filters',
     'core',
     'members'
 ]
@@ -95,6 +100,12 @@ DATABASES = {
 if ENVIRONMENT == 'production':
     DEBUG = False
     SECRET_KEY = os.getenv('SECRET_KEY')
+    EMAIL_HOST = env("EMAIL_HOST")
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+    RECIPIENT_ADDRESS = env("RECIPIENT_ADDRESS")
     SESSION_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -114,10 +125,18 @@ SITE_ID = 1
 
 
 AUTH_USER_MODEL = 'members.User'
-LOGIN_REDIRECT_URL = '/login'
+LOGIN_REDIRECT_URL = 'login'
 
 # CRISPY FORMS
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-STRIPE_PUBLIC_KEY = "fjgfdjdfgjfdjweretie53498er9"
-STRIPE_SECRET_KEY = "reteufgfidfsjdkrntjkn54jk35n3j"
+STRIPE_PUBLIC_KEY = "pk_test_51L3RHmLAbihixCVCWdTcenPRxekYPimHheRUYve1wT8iGt5dI0wZBWXxvz9i37BB39kmBcXExVsgEPP1LcOaXTNy0084AUxOl4"
+STRIPE_SECRET_KEY = "sk_test_51L3RHmLAbihixCVC0O4I6ZosqbOQTLPTi9yyUQq4XAMO1JZ5Ql9auldbm6rzAQKB6uWaN4MbfTjwSTg6Fea5H67C00Vmc8htLF"
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "lazyprogrammerff@gmail.com"
+EMAIL_HOST_PASSWORD = "yuopggisvenhzbli"
+RECIPIENT_ADDRESS = "ayodeleayoolaoke4@gmail.com"

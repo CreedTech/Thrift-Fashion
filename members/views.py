@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages, auth
-from members.forms import ProfileForm
+from members.forms import EditProfileForm, ProfileForm
 from django.contrib.auth.decorators import login_required
 from members.models import User
 
@@ -70,18 +70,20 @@ def logout(request):
 @login_required
 def edit_profile(request):
     if request.method == "POST":
-        profile_form = ProfileForm(request.POST or None, instance=request.user)
-        if profile_form.is_vaild():
+        profile_form = EditProfileForm(
+            request.POST or None, instance=request.user)
+        if profile_form.is_valid():
+            profile_form.save()
             profile_form.save()
             if request.user.is_authenticated and request.user.is_staff:
-                messages.success(request, 'Edited sucessfully')
+                messages.success(request, 'Editted successfully')
                 return redirect('core:home')
-            elif request.user.is_authenticated and request.user.is_staff:
-                messages.success(request, 'Edited sucessfully')
+            elif request.user.is_authenticated and not request.user.is_staff:
+                messages.success(request, 'Editted successfully')
                 return redirect('core:home')
 
     else:
-        profile_form = ProfileForm(instance=request.user)
+        profile_form = EditProfileForm(instance=request.user)
 
     context = {
         'profile_form': profile_form
