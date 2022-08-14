@@ -37,7 +37,7 @@
             <tr>
               <td class="align-middle">
                 <img src="{{ order_item.item.image.url }}" alt="" style="width: 50px" />
-                {{ order_item.item.title }}
+                {{ order_item.item.title|truncatechars:9 }}
               </td>
               <td class="align-middle">
                 {% if order_item.item.discount_price %}

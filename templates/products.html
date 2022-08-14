@@ -87,7 +87,7 @@
                     </div>
                     <div class="text-center py-4">
                       <a class="h6 text-decoration-none text-truncate" href="{{ item.get_absolute_url }}"
-                        >{{ item.title }} &nbsp;&nbsp;</a
+                        >{{ item.title|truncatechars:9 }} &nbsp;&nbsp;</a
                       ><span class="badge badge-pill badge-{{ item.get_label_display }}">{{ item.get_stock_display }}</span>
                       <div
                         class="d-flex align-items-center justify-content-center mt-2"

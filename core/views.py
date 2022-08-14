@@ -357,8 +357,8 @@ def home(request):
     paginate_by = 10
     items = Item.objects.all()
     hot_product1 = Item.objects.all().order_by('?')[0] if Item.objects.all().count() > 0 else Item.objects.all()
-    hot_product2 = Item.objects.all().order_by('?')[1] if Item.objects.all().count() > 0 else Item.objects.all()
-    recent_product = Item.objects.all().order_by('-launch_date')[0:2] if Item.objects.all().count() > 0 else Item.objects.all()
+    hot_product2 = Item.objects.all().order_by('?')[0] if Item.objects.all().count() > 0 else Item.objects.all()
+    recent_product = Item.objects.all().order_by('-launch_date')[0:4] if Item.objects.all().count() > 0 else Item.objects.all()
     context = {
         'name': name,
         'items': items,

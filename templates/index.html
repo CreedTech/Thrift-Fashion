@@ -209,7 +209,7 @@
           <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
             <div class="product-item bg-light mb-4">
               <div class="product-img position-relative overflow-hidden">
-                <img class="img-fluid w-100" src="{{ item.image.url }}" alt="" />
+                <img class="img-fluid w-100"src="{{ item.image.url }}" alt="" />
                 <div class="product-action">
                   <a class="btn btn-outline-dark btn-square" href="{{ item.get_add_to_cart_url }}"
                     ><i class="fa fa-shopping-cart"></i
@@ -218,7 +218,7 @@
               </div>
               <div class="text-center py-4">
                 <a class="h6 text-decoration-none text-truncate" href="{{ item.get_absolute_url }}"
-                  >{{ item.title }}&nbsp;&nbsp;</a
+                  >{{ item.title|truncatechars:9 }}&nbsp;&nbsp;</a
                 ><span class="badge badge-pill badge-{{ item.get_label_display }}">{{ item.get_stock_display }}</span>
                 <div
                   class="d-flex align-items-center justify-content-center mt-2"
@@ -287,7 +287,7 @@
               </div>
               <div class="text-center py-4">
                 <a class="h6 text-decoration-none text-truncate" href="{{ i.get_absolute_url }}"
-                  >{{i.title}} &nbsp;&nbsp;</a
+                  >{{i.title|truncatechars:9}} &nbsp;&nbsp;</a
                 ><span class="badge badge-pill badge-{{ i.get_label_display }}">{{ item.get_stock_display }}</span>
                 <div
                   class="d-flex align-items-center justify-content-center mt-2"
