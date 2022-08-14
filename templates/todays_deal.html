@@ -53,11 +53,13 @@
         <div class="product-item bg-light mb-4">
           <div class="product-img position-relative overflow-hidden">
             <img class="img-fluid w-100" src="{{i.image.url}}" alt="" />
+            {% if request.user.is_authenticated %}
             <div class="product-action">
               <a class="btn btn-outline-dark btn-square" href="{{ i.get_add_to_cart_url }}"
                 ><i class="fa fa-shopping-cart"></i
               ></a>
             </div>
+            {% endif %}
           </div>
           <div class="text-center py-4">
             <a class="h6 text-decoration-none text-truncate" href="{{ i.get_absolute_url }}"

@@ -47,12 +47,13 @@
           <p class="mb-4">
             {{ object.description }}
           </p>
+          {% if request.user.is_authenticated %}
           <div class="d-flex align-items-center mb-4 pt-2">
             <button class="btn btn-primary px-3">
               <a href="{{ object.get_add_to_cart_url }}" style="color: black; text-decoration: none;"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</a>
             </button>
           </div>
-          
+          {% endif %}
         </div>
       </div>
     </div>
