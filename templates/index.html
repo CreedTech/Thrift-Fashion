@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% block head_title %}Home|Thrift Fashion Store{% endblock  %}
 {% block content %}
       <!-- Carousel Start -->
       <div class="container-fluid mb-3">
@@ -40,8 +40,7 @@
                         Men Fashion
                       </h1>
                       <p class="mx-md-5 px-5 animate__animated animate__bounceIn">
-                        Lorem rebum magna amet lorem magna erat diam stet. Sadips
-                        duo stet amet amet ndiam elitr ipsum diam
+                        Being perfectly well-dressed gives one a tranquillity that no religion can bestow.
                       </p>
                       <a
                         class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp"
@@ -70,8 +69,7 @@
                         Women Fashion
                       </h1>
                       <p class="mx-md-5 px-5 animate__animated animate__bounceIn">
-                        Lorem rebum magna amet lorem magna erat diam stet. Sadips
-                        duo stet amet amet ndiam elitr ipsum diam
+                        Fashion is what you’re offered four times a year by designers. And style is what you choose
                       </p>
                       <a
                         class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp"
@@ -100,8 +98,7 @@
                         Kids Fashion
                       </h1>
                       <p class="mx-md-5 px-5 animate__animated animate__bounceIn">
-                        Lorem rebum magna amet lorem magna erat diam stet. Sadips
-                        duo stet amet amet ndiam elitr ipsum diam
+                        Style is knowing who you are, what you want to say, and not giving a damn.
                       </p>
                       <a
                         class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp"
@@ -125,7 +122,6 @@
             <div class="product-offer mb-30" style="height: 200px">
               <img class="img-fluid" src="{{hot_product2.image.url}}" alt="" />
               <div class="offer-text">
-                <h6 class="text-white text-uppercase">Save 20%</h6>
                 <h3 class="text-white mb-3">Special Offer</h3>
                 <a href="{{ hot_product2.get_absolute_url }}" class="btn btn-primary">Shop Now</a>
               </div>

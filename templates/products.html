@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% block head_title %}Products{% endblock  %}
 
 {% block content %}
 
@@ -30,32 +31,22 @@
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input" checked id="price-all">
                         <label class="custom-control-label" for="price-all">All Price</label>
-                        <span class="badge border font-weight-normal">1000</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input" name="min_price" id="price-1">
-                        <a href=""><label class="custom-control-label" for="price-1">$0 - $100</label></a>
-                        <span class="badge border font-weight-normal">150</span>
+                        <a href="?sort=l2h"><span class="custom-control-label" for="price-1">$0 - $30</span></a>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input" id="price-2">
-                        <label class="custom-control-label" for="price-2">$100 - $200</label>
-                        <span class="badge border font-weight-normal">295</span>
+                        <a href="?sort=h2l"><span class="custom-control-label" for="price-1">$30 - $50</span></a>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input" id="price-3">
-                        <label class="custom-control-label" for="price-3">$200 - $300</label>
-                        <span class="badge border font-weight-normal">246</span>
+                        <a href="?sort=l2h"><span class="custom-control-label" for="price-1">$50 - $70</label></a>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input" id="price-4">
-                        <label class="custom-control-label" for="price-4">$300 - $400</label>
-                        <span class="badge border font-weight-normal">145</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                        <input type="checkbox" class="custom-control-input" id="price-5">
-                        <label class="custom-control-label" for="price-5">$400 - $500</label>
-                        <span class="badge border font-weight-normal">168</span>
+                        <a href="?sort=h2l"><span class="custom-control-label" for="price-1">$70 - $100</span></a>
                     </div>
                 </form>
             </div>

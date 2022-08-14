@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% block head_title %}About{% endblock  %}
 {% block content %}
    <!-- Breadcrumb Start -->
    <div class="container-fluid">
     <div class="row px-xl-5">
       <div class="col-12">
         <nav class="breadcrumb bg-light mb-30">
-          <a class="breadcrumb-item text-dark" href="#">Home</a>
+          <a class="breadcrumb-item text-dark" href="{% url 'core:home' %}">Home</a>
           <span class="breadcrumb-item active">About Us</span>
         </nav>
       </div>
@@ -20,24 +20,17 @@
     <div class="container pt-5">
       <div class="row align-items-center">
         <div class="col-lg-6">
-          <img class="img-fluid mb-4 mb-lg-0" src="{%static 'img/about.jpg' %}" alt="" />
+          <img class="img-fluid mb-4 mb-lg-0" height="500px" src="{%static 'img/about_img.png' %}" alt="" />
         </div>
         <div class="col-lg-6">
           <h1 class="display-4 text-uppercase mb-4">
-            Best digital agency in downtown
+            Most Affordable Fashion Store in downtown
           </h1>
           <h5 class="text-uppercase text-mam mb-3">
-            Clita elitr et amet et ipsum sea. Ipsum stet kasd ea et no est duo
-            diam. Lorem dolores eos ut nonumy ipsum sit clita lorem no amet
-            dolor dolore, stet sit dolor justo
+            Thrift Fashion Store is one of the most affordable fashion store in the industry. We have been upgrading our fits to make sure people can afford to get anything they want. 
           </h5>
           <p class="mb-4">
-            Eirmod est dolor nonumy sea amet dolore erat sit dolor et dolor
-            vero. Tempor ipsum at justo amet at ipsum justo. Aiam kasd sea sit
-            dolor duo elitr dolor amet, justo est ipsum amet dolor ut ipsum.
-            Labore diam et nonumy amet dolores. Volup sit labore dolores erat,
-            magna justo sed lorem kasd ea dolor. Labore sit clita invidunt,
-            est dolores lorem sed ipsum kasd no amet ipsum.
+            We deal with the pre-used fashionable clothing and provide better access to these products, based on the feedbacks that we received from their customers. It is a modernised fashion establishment located in Nigeria, Joju Sango-Ota. With the growing demand for high-quality and great service at low expense rate, it expects to catch the interest of a regular loyal customer base with its broad variety of materials and designs products. Thrift Fashion Store aims to offer its high quality products at a rock bottom price to meet the demand of the low-income local and expatriate market, in the residences and offices in the area.
           </p>
         </div>
       </div>
